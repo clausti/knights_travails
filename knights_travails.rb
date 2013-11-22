@@ -27,7 +27,7 @@ class KnightPathFinder
     possible_moves.delete_if { |move| !valid_move?(move) }
   end
 
-  def vectors_to_moves(position, vectors) #WORKS
+  def vectors_to_moves(position, vectors)
     possible_moves = []
     vectors.each do |vector|
       new_x = position[0] + vector[0]
@@ -37,7 +37,7 @@ class KnightPathFinder
     possible_moves
   end
 
-  def valid_move?(move) #WORKS
+  def valid_move?(move)
     move.all? { |coord| coord >= 0 && coord < 8 }
   end
 

@@ -16,7 +16,6 @@ class TreeNode
   end
 
   def children=(new_children)
-    #invalid to add something that is in the used_positions array
     new_children.delete_if { |child| child == self }
     new_children.each { |child| child.parent = self }
     @children += new_children
