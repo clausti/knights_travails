@@ -6,24 +6,18 @@ class KnightPathFinder
   def initialize(start_position)
     @start_position = start_position
     @knight_moves = [[2, 1],[-2, -1],[1, 2],[-1, -2],[1, -2],[-1, 2],[2, -1],[-2, 1]]
-    @positions_visited = [start_position]
     @root = TreeNode.new(@start_position)
     build_move_tree(@root)
   end
 
   def build_move_tree(node)
     new_root = node
-   
-    new_children = new_move_positions(new_root.value) #array of positions
+    return if self.find_depth(node) > 6
+    new_children = new_move_positions(new_root.value)
     new_children.each do |child_position|
-      next if @positions_visited.include?(child_position)
-      
-      if @positions_visited.length <= 64
-        @positions_visited << child_position
-        child_node = TreeNode.new(child_position)
-        new_root.child = child_node
-        build_move_tree(child_node)
-      end
+      child_node = TreeNode.new(child_position)
+      new_root.child = child_node
+      build_move_tree(child_node)
     end
   end
 
@@ -49,12 +43,21 @@ class KnightPathFinder
 
   def find_path(end_pos)
     target = self.root.bfs(end_pos)
-    path = [target.value]
-    until target.parent.nil?
-      path.unshift(target.parent.value)
-      target = target.parent
+    self.trace_to_root(target)
+  end
+  
+  def find_depth(node)
+    path = self.trace_to_root(node)
+    return path.length
+  end
+  
+  def trace_to_root(node)
+    path = [node.value]
+    until node.parent.nil?
+      path.unshift(node.parent.value)
+      node = node.parent
     end
-    return path
+    path
   end
 
 end
