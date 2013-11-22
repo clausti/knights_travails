@@ -8,33 +8,29 @@ class KnightPathFinder
     @knight_moves = [[2, 1],[-2, -1],[1, 2],[-1, -2],[1, -2],[-1, 2],[2, -1],[-2, 1]]
     @positions_visited = [start_position]
     @root = TreeNode.new(@start_position)
-    p "print me"
     build_move_tree(@root)
-    p "now print me"
   end
 
   def build_move_tree(node)
     new_root = node
    
     new_children = new_move_positions(new_root.value) #array of positions
-    new_children.each do |child_position| #child still coordinates
-
+    new_children.each do |child_position|
       next if @positions_visited.include?(child_position)
       
-      if @positions_visited.length <= 64 # deciding what to exclude
-        p @positions_visited.length
-        @positions_visited << child_position #unless @positions_visited.include?(child_pos)
+      if @positions_visited.length <= 64
+        @positions_visited << child_position
         child_node = TreeNode.new(child_position)
         new_root.child = child_node
-        build_move_tree(child_node) #unless @positions_visited.length == (8 * 8)
+        build_move_tree(child_node)
       end
     end
   end
 
-  def new_move_positions(current_pos) #WORKS
+  def new_move_positions(current_pos)
     return [] if current_pos.nil?
-    possible_moves = vectors_to_moves(current_pos, @knight_moves) #array of positions
-    possible_moves.delete_if { |move| !valid_move?(move) } #no longer returns any nil children
+    possible_moves = vectors_to_moves(current_pos, @knight_moves) 
+    possible_moves.delete_if { |move| !valid_move?(move) }
   end
 
   def vectors_to_moves(position, vectors) #WORKS
@@ -51,10 +47,15 @@ class KnightPathFinder
     move.all? { |coord| coord >= 0 && coord < 8 }
   end
 
-  # def find_path(end_pos)
-# 
-#     #return an array of positions
-#   end
+  def find_path(end_pos)
+    target = self.root.bfs(end_pos)
+    path = [target.value]
+    until target.parent.nil?
+      path.unshift(target.parent.value)
+      target = target.parent
+    end
+    return path
+  end
 
 end
 
